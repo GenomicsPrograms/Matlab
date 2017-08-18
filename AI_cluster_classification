@@ -1,0 +1,49 @@
+% Matlab's Self-Organizing Map (SOMs) Neural Network
+%
+% The input data file needs to have columns which represent a set of things (i.e classes of patients: controls and disease,etc )
+% and rows that represent the attributes of those things (i.e., miRNAs, drug concentrations, molecular composition, etc)
+
+% Step 1: Import dataset without headers/labels, select numerical matrix and name it: x
+% Step 2: Copy the code below and paste it into the matlab command line.
+
+net = selforgmap([1 2]);
+view(net)
+[net,tr] = train(net,x);
+y = net(x);
+cluster_index = vec2ind(y);
+plotsomhits(net,x)
+
+% Step 3: Open the cluster_index variable and copy paste it into an Excel spreadsheet, 
+%         make sure that the values are pasted under the column labels of your dataset in Excel.
+%
+% id             ctrl1 ctrl2 ctrl3 ctrl4 ctrl5 tumor1 tumor2 tumor3 tumor4 tumor5
+% cluster_index    1     2     1     1     1     2      2     1       2      1
+% mir-123          23    24   24    12    23    33     36    24      32     31
+% mire-456         22    23   25    22    24    32     33    21      30     30
+%
+%
+% Step 4: Select the cluster_index values under the control labels, copy and transpose paste them into a new spreadsheet
+%         and sort the column smallest to greatest. Do this seperately for the disease labels.
+% 
+% 1
+% 1
+% 1
+% 1 
+% 2
+% 
+% Step 5: Count the frequency of 1 and 2, etc. Create a contingency table and paste in the frequency of values for each class.
+%
+%  Class   Disease   Control
+%     1       2         4
+%     2       3         1
+%
+%
+% Step 6: Use Fishers Exact test to test the contingency table to see if there is a significant non-random association.
+%
+
+dataTBL = table([2;3],[4;1],'VariableNames',{'Disease','Control'},'RowNames',{'Class1','Class2'})
+
+% Step 7: Use a right-tailed Fisher's exact test to determine if the odds of being diseased is higher for individuals 
+% who were in class 1 than for individuals who were in class 2. Conduct the test at the 5% significance level.
+
+[h,p,stats] = fishertest(dataTBL,'Tail','right','Alpha',0.05)
